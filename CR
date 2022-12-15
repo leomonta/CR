@@ -42,7 +42,7 @@ class COLORS:
 
 	RESET            = '\033[0m'
 
-# command CR 'target' 'source/s'
+# command CR 'base' 'target' 'source/s'
 def main():
 	num = len(sys.argv)
 	
@@ -50,27 +50,32 @@ def main():
 		print(f"{COLORS.FG_RED}At least 2 arguments needed. {num} provided.{COLORS.RESET}")
 		quit(1)
 	
-	target_filename = sys.argv[1]
-	source_filenames = sys.argv[2:]
+	base_filename = sys.argv[1]
+	target_filename = sys.argv[2]
+	source_filenames = sys.argv[3:]
 
 	components_names: list[str] = []
 	components_bodies: list[str] = []
 
+
 	for comp_filename in source_filenames:
-		components_names.append(os.path.splitext(comp_filename)[0])
+		components_names.append(os.path.basename(os.path.splitext(comp_filename)[0]))
 		with open(comp_filename) as component:
 			components_bodies.append(component.read())
 
 	target_file: str
-	with open(target_filename) as base:
+	with open(base_filename) as base:
 		target_file = base.read()
+
 
 	new_file: str
 	for i in range(len(components_names)):
-		comp_target_name = "<"+components_names[i]+"/>"
-		new_file = target_file.replace(comp_target_name, components_bodies[i])
+		comp_target_name_compact = "<"+components_names[i]+"/>"
+		comp_target_name_long = "<"+components_names[i]+" />"
+		new_file = target_file.replace(comp_target_name_compact, components_bodies[i])
+		new_file = target_file.replace(comp_target_name_long, components_bodies[i])
 	
-	with open(target_filename, "w") as f:
+	with open(target_filename, "w+") as f:
 		f.write(new_file)
 
 
