@@ -8,7 +8,9 @@ The components are just html files, the name of the component is the name of the
 
 No settings (yet)
 
-First argument is the target file
+First argument is the base file
+
+Second argument is the destination file
 
 Every other argument is a component file that will be used to replace the specific tag
 
