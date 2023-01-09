@@ -6,11 +6,11 @@ The components are just html files, the name of the component is the name of the
 
 ## Args
 
-	No settings (yet)
+No settings (yet)
 
-	First argument is the target file
+First argument is the target file
 
-	Every other argument is a component file that will be used to replace the specific tag
+Every other argument is a component file that will be used to replace the specific tag
 
 ## Feature to add
 
