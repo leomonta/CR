@@ -48,9 +48,9 @@ class COLORS:
 def main():
 	num = len(sys.argv)
 
-	if num < 3:
+	if num < 4:
 		print(
-		    f"{COLORS.FG_RED}At least 2 arguments needed. {num} provided.{COLORS.RESET}"
+		    f"{COLORS.FG_RED}At least 3 arguments needed. {num} provided.{COLORS.RESET}"
 		)
 		quit(1)
 
