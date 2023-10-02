@@ -7,7 +7,7 @@
 		{
 			"name": "exec CR",
 			"type": "python",
-			"args": ["test/index.html", "test/output.html", "test/header.svg"],
+			"args": ["test/index.html", "test/output.html", "test/comp.html"],
 			"request": "launch",
 			"program": "CR",
 			"console": "integratedTerminal",
