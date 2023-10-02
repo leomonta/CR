@@ -49,9 +49,7 @@ def main():
 	num = len(sys.argv)
 
 	if num < 4:
-		print(
-		    f"{COLORS.FG_RED}At least 3 arguments needed. {num} provided.{COLORS.RESET}"
-		)
+		print(f"{COLORS.FG_RED}At least 3 arguments needed. {num} provided.{COLORS.RESET}")
 		quit(1)
 
 	base_filename = sys.argv[1]
@@ -62,9 +60,7 @@ def main():
 	components_bodies: list[str] = []
 
 	for comp_filename in source_filenames:
-		components_names.append(
-		    os.path.basename(os.path.splitext(comp_filename)[0])
-		)
+		components_names.append(os.path.basename(os.path.splitext(comp_filename)[0]))
 		with open(comp_filename) as component:
 			components_bodies.append(component.read())
 
@@ -79,15 +75,11 @@ def main():
 	for i in range(len(components_names)):
 		comp_target_name_comp = "<" + components_names[i] + "/>"
 		comp_target_name_long = "<" + components_names[i] + " />"
-		
+
 		if target_file.find(comp_target_name_comp) != -1:
-			target_file = target_file.replace(
-				comp_target_name_comp, components_bodies[i]
-			)
+			target_file = target_file.replace(comp_target_name_comp, components_bodies[i])
 		if target_file.find(comp_target_name_long) != -1:
-			target_file = target_file.replace(
-				comp_target_name_long, components_bodies[i]
-			)
+			target_file = target_file.replace(comp_target_name_long, components_bodies[i])
 
 	with open(target_filename, "w+") as f:
 		f.write(target_file)
