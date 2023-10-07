@@ -2,9 +2,9 @@
 
 A simple Component Replacer script
 
-The components are just html files, the name of the component is the name of the file that contains said component
+The components are just html files, the name of the component is the name of the file that contains said component.
 
-An example of a component is
+An example of a component is:
 
 ``` html
 <nav class="navbar">
@@ -18,7 +18,7 @@ An example of a component is
 </nav>
 
 ```
-And can be used like this
+And can be used like this:
 
 ``` html
 <html>
@@ -26,13 +26,13 @@ And can be used like this
 		...
 	</head>
 	<body>
-		<navbar/>
+		<navbar prop=value/>
 	</body>
 </html>
 
 ```
 
-Resulting in
+Resulting in:
 
 
 ``` html
@@ -41,41 +41,47 @@ Resulting in
 		...
 	</head>
 	<body>
-		<nav class="navbar">
+		
+<nav class="navbar">
 	<div id="nav-home">
 		<a href="/index.html">Home</a>
 	</div>
 	<div class="dropdown">
 		My projects
-		<div id="gh-projects" class="dropdown-options"></div>
+		<div id="gh-projects" class="dropdown-options">
+			~prop~
+		</div>
 	</div>
 </nav>
 	</body>
 </html>
 
 ```
-Be wary that the tool does not hve any regards for indentation (as shown)
+> Be wary that the tool does not have any regards for indentation (as shown).
 
+---
 
-## Args
+## Usage
 
-First argument is the base file, the file that refers / uses components
+### Args
 
-Second argument is the destination file, the file that will be written with the component added
+The first argument is the base file, the file that refers to / uses components.
 
-Every other argument is a component file that will be used to replace the specific tag
+The second argument is the output file, the file that will be written with the component added.
 
-## Passing arguments to components
+Every other argument after will be considered as a component file that will be used to replace the specific tag.
 
-You can define a component that uses arguments by just adding the symbol in the compnents html delimited by tilde '~'
+### Passing arguments to components
 
-Something like
+You can define a component that uses arguments by just adding the symbol in the compnents html delimited by the tilde `~` character.
+
+Something like:
 ``` html
 <a href="~url~">
 	This leads to another part of the website
 </a>
 ```
-When the component is used the 'url' can be specified as if it was a prop
+When the component is used the 'url' can be specified as if it was a prop.
 
 ``` html
 <html>
@@ -88,7 +94,7 @@ When the component is used the 'url' can be specified as if it was a prop
 </html>
 ```
 
-producing
+Producing:
 
 ``` html
 <html>
@@ -103,7 +109,8 @@ producing
 </html>
 ```
 
-Any prop that is not specified is not replaced, except if a default value is specified on the firsts line of the component
+Any prop that is not specified is not replaced, except if a `default` is specified on the top, and only the top, line of the component.
+> The line must start with `~` else it will be treated as the content of the component and the rest of it will be skipped
 
 Valid
 
@@ -114,6 +121,7 @@ Valid
 </a>
 ```
 Invalid
+> (Will not throw an error but will not treat it as a defult definition)
 
 ``` html
 <p> 
@@ -124,3 +132,14 @@ Invalid
 	This leads to another part of the website
 </a>
 ```
+
+Accidentally, defining an empty prop as default:
+
+```html
+~~ = "404.html"
+<a href="~~">
+	This leads to another part of the website
+</a>
+```
+will work both with defaults and with props definition `<comp_name =value />`.
+Make of this what you want.
