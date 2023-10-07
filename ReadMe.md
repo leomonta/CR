@@ -103,7 +103,7 @@ producing
 </html>
 ```
 
-Any prop that is not specified is replaced by nothing, thus remove, except if a default values is specified on the firsts line of the component
+Any prop that is not specified is not replaced, except if a default value is specified on the firsts line of the component
 
 Valid
 

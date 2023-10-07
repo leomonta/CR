@@ -44,6 +44,54 @@ class COLORS:
 	RESET = '\033[0m'
 
 
+def get_compiled_component(component: str, props: dict[str, str]) -> str:
+	"""
+	Parse the component searching for default prop intializers
+
+	returns the found props at pos 0 and the component stripped of the default initializers at the start
+	"""
+
+	curr_start = 0
+	defaults: dict[str, str] = {}
+
+	# line by line
+	while True:
+
+		# to be a valid default setup it has to start at the first of the line and be at the top of the file
+		if component[curr_start] != "~":
+			break
+
+		end_line = component.find("\n", curr_start)
+
+		# end of the file
+		if end_line < 0:
+			break
+
+		closing_tilde = component.find("~", curr_start + 1, end_line)
+
+		# we have a prop name
+		if closing_tilde >= 0:
+			parts = component[curr_start:end_line].split("=", 1)
+
+			# we have a prop value
+			if len(parts) == 2:
+				parts[0] = parts[0].strip("~")
+				defaults[parts[0]] = parts[1]
+
+		curr_start = end_line + 1
+
+	# merges the two dict together and replace any duplicate name from default with the ones from hte given props
+	defaults.update(props)
+
+	component = component[curr_start:]
+
+	for name in defaults:
+		component = component.replace(f"~{name}~", defaults[name])
+
+		# start checking from next line
+	return component
+
+
 # command CR 'base' 'target' 'source/s'
 def main():
 	num = len(sys.argv)
@@ -81,28 +129,24 @@ def main():
 		if comp_pos_start == -1:
 			continue
 
-		comp_pos_end = base_file[comp_pos_start:].find("/>") + comp_pos_start  # ignore the /> on purpuse
+		# ignore the /> on purpuse
+		comp_pos_end = base_file[comp_pos_start:].find("/>") + comp_pos_start
 
-		comp_tag: str = base_file[comp_pos_start:comp_pos_end]
+		comp_tag: str = base_file[comp_pos_start + 1:comp_pos_end]
 
 		props: dict[str, str] = {}
 
 		elements = comp_tag.split()
 
-		# print(elements, comp_tag)
-
 		for el in elements:
-			parts = el.split("=")
+			parts = el.split("=", 1)
 
 			if len(parts) == 2:
 				props[parts[0]] = parts[1]
 
-		new_comp = components_content[i]
+		compiled_component = get_compiled_component(components_content[i], props)
 
-		for name in props:
-			new_comp = new_comp.replace(f"~{name}~", props[name])
-
-		base_file = base_file.replace(base_file[comp_pos_start:comp_pos_end + 2],"\n" + new_comp)
+		base_file = base_file.replace(base_file[comp_pos_start:comp_pos_end + 2], "\n" + compiled_component)
 
 	with open(output_path, "w+") as f:
 		f.write(base_file)
