@@ -44,6 +44,10 @@ class COLORS:
 	RESET = '\033[0m'
 
 
+# Should be more that enought to not interfere with any genuine use
+MAX_REPETITIONS = 100
+
+
 def get_compiled_component(component: str, props: dict[str, str]) -> str:
 	"""
 	Parse the component searching for default prop intializers
@@ -121,32 +125,49 @@ def main():
 		print(base_path + " is a directory, doing nothing")
 		exit(1)
 
-	for i in range(len(components_names)):
-		# simple conponent withou props and closing />
+	repetition = 0
+	changes = 0
+	while True:
+		for i in range(len(components_names)):
+			# simple conponent withou props and closing />
 
-		comp_pos_start = base_file.find("<" + components_names[i])
+			comp_pos_start = base_file.find("<" + components_names[i])
 
-		if comp_pos_start == -1:
-			continue
+			if comp_pos_start == -1:
+				continue
 
-		# ignore the /> on purpuse
-		comp_pos_end = base_file[comp_pos_start:].find("/>") + comp_pos_start
+			# ignore the /> on purpuse
+			comp_pos_end = base_file[comp_pos_start:].find("/>") + comp_pos_start
 
-		comp_tag: str = base_file[comp_pos_start + 1:comp_pos_end]
+			comp_tag: str = base_file[comp_pos_start + 1:comp_pos_end]
 
-		props: dict[str, str] = {}
+			# collect all of the props defined in the component use
+			props: dict[str, str] = {}
 
-		elements = comp_tag.split()
+			elements = comp_tag.split()
 
-		for el in elements:
-			parts = el.split("=", 1)
+			for el in elements:
+				parts = el.split("=", 1)
 
-			if len(parts) == 2:
-				props[parts[0]] = parts[1]
+				if len(parts) == 2:
+					props[parts[0]] = parts[1]
 
-		compiled_component = get_compiled_component(components_content[i], props)
+			compiled_component = get_compiled_component(components_content[i], props)
 
-		base_file = base_file.replace(base_file[comp_pos_start:comp_pos_end + 2], "\n" + compiled_component)
+			base_file = base_file.replace(base_file[comp_pos_start:comp_pos_end + 2], "\n" + compiled_component)
+
+			# we count any repacing as a change
+			changes += 1
+
+		# stop only if there are no more changes or if the max recursion limit has been hit
+		if changes == 0:
+			break
+
+		# or stops if we made to many passages (prolly a recursive component)
+		if repetition > MAX_REPETITIONS:
+			print(f"{COLORS.FG_YELLOW}Stopped replacing components due to exceeding the max repetion count of {MAX_REPETITIONS}.{COLORS.RESET}")
+			break
+		repetition += 1
 
 	with open(output_path, "w+") as f:
 		f.write(base_file)
