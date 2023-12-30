@@ -6,6 +6,7 @@ The components are just html files, the name of the component is the name of the
 
 An example of a component is:
 
+`file: navbar.html`
 ``` html
 <nav class="navbar">
 	<div id="nav-home">
@@ -16,10 +17,11 @@ An example of a component is:
 		<div id="gh-projects" class="dropdown-options"></div>
 	</div>
 </nav>
-
 ```
+
 And can be used like this:
 
+`file: index.html`
 ``` html
 <html>
 	<head>
@@ -35,6 +37,7 @@ And can be used like this:
 Resulting in:
 
 
+`file: result.html`
 ``` html
 <html>
 	<head>
@@ -65,37 +68,38 @@ Resulting in:
 
 ### Args
 
-The first argument is the base file, the file that refers to / uses components.
-
-The second argument is the output file, the file that will be written with the component added.
-
-Every other argument after will be considered as a component file that will be used to replace the specific tag.
+1. `base` file; the file that refers to / uses components.
+2. `result` file; the file that will be produced as a result with the component expanded.
+3. `component`s files; the files of all the component that might be present in the base file.
 
 ### Passing arguments to components
 
-You can define a component that uses arguments by just adding the symbol in the compnents html delimited by the tilde `~` character.
+You can define a component that uses arguments by just adding the symbol in the components body delimited by the tilde `~` character.
 
 Something like:
+`file: link.html`
 ``` html
-<a href="~url~">
+<a href=~url~>
 	This leads to another part of the website
 </a>
 ```
 When the component is used the 'url' can be specified as if it was a prop.
 
+`file: link.html`
 ``` html
 <html>
 	<head>
 		...
 	</head>
 	<body>
-		<navbar url="/projects/CR.html">
+		<link url="/projects/CR.html">
 	</body>
 </html>
 ```
 
 Producing:
 
+`file: result.html`
 ``` html
 <html>
 	<head>
@@ -109,14 +113,14 @@ Producing:
 </html>
 ```
 
-Any prop that is not specified is not replaced, except if a `default` is specified on the top, and only the top, line of the component.
+Any prop that is not specified is not replaced, except if a `default` is specified on the top, and only the top, lines of the component.
 > The line must start with `~` else it will be treated as the content of the component and the rest of it will be skipped
 
 Valid
 
 ``` html
 ~url~ = "404.html"
-<a href="~url~">
+<a href=~url~>
 	This leads to another part of the website
 </a>
 ```
@@ -128,7 +132,7 @@ Invalid
 	Lorem ipsum dolor sit amete
 </p>
 ~url~ = "404.html"
-<a href="~url~">
+<a href=~url~>
 	This leads to another part of the website
 </a>
 ```
@@ -137,7 +141,7 @@ Accidentally, defining an empty prop as default:
 
 ```html
 ~~ = "404.html"
-<a href="~~">
+<a href=~~>
 	This leads to another part of the website
 </a>
 ```
