@@ -111,7 +111,9 @@ def main():
 	components_names: list[str] = []
 	components_content: list[str] = []
 
+	# dump the content of the files in the respective variables
 	for comp_filename in component_paths:
+
 		# take the path and reduce it to only the filename
 		components_names.append(os.path.basename(os.path.splitext(comp_filename)[0]))
 		with open(comp_filename) as component:
@@ -129,7 +131,6 @@ def main():
 	changes = 0
 	while True:
 		for i in range(len(components_names)):
-			# simple conponent withou props and closing />
 
 			comp_pos_start = base_file.find("<" + components_names[i])
 
