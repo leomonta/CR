@@ -147,3 +147,8 @@ Accidentally, defining an empty prop as default:
 ```
 will work both with defaults and with props definition `<comp_name =value />`.
 Make of this what you want.
+
+## Additions
+
+### Countinuous watching
+Keep watching the files for changes (use something like `epoll`) to compile the templates as soon as they change
